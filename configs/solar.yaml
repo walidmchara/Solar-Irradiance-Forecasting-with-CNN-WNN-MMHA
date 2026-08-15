@@ -3,25 +3,29 @@ seed: 42
 data:
   csv_path: data/raw/solar.csv
   datetime_column: datetime_utc
-  target_column: GHI
+  target_column: GI
   city_column: city
   sequence_length: 24
-  test_cities: [Tokyo]
+  test_cities: [Tunis]
   validation_fraction: 0.20
 
 features:
   numeric:
     - DNI
     - DHI
-    - ClearSky_GHI
-    - Temperature_2m
-    - Relative_Humidity_2m
-    - Surface_Pressure
-    - Wind_Speed_10m
-    - Wind_Direction_10m
-    - Precipitation
-    - clear_sky_index
+    - Clearsky_GHI
+    - Clearsky_DNI
+    - Clearsky_DHI
+    - SH
+    - Solar_Zenith_Angle
     - is_day
+    - T
+    - WS
+    - WD
+    - RH
+    - P
+    - CC
+    - PA
     - hour_sin
     - hour_cos
     - day_of_year_sin
@@ -30,8 +34,8 @@ features:
     - month_cos
 
 model:
-  type: transformer
-  hidden_size: 128
+  type: cnn_wnn_mmha
+  hidden_size: 64
   num_layers: 2
   num_heads: 4
   dropout: 0.20
