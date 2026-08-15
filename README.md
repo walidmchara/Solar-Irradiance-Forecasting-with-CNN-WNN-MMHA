@@ -81,3 +81,8 @@ The training pipeline produces:
 ## Notes
 
 This repository provides a reproducible baseline for hybrid irradiance forecasting using the Tunisian climatic dataset and a CNN-WNN-MMHA architecture tailored for renewable energy prediction tasks.
+
+## 🔔 Citation & Attribution
+
+This work is part of the [AI Research Portfolio](https://github.com/walidmchara/Solar-Irradiance-Forecasting-with-CNN-WNN-MMHA) by Walid Mchara, PhD.
+W. Mchara, L. Manai, M. Abdellatif Khalfa, M. Raissi and S. Hannechi, "A Global Irradiance Prediction Model Using Convolutional Neural Networks, Wavelet Neural Networks, and Masked Multi-Head Attention Mechanism," in IEEE Access, vol. 13, pp. 29445-29462, 2025, doi: 10.1109/ACCESS.2025.3539463. keywords: {Predictive models;Convolutional neural networks;Neural networks;Forecasting;Feature extraction;Accuracy;Meteorology;Data models;Computational modeling;Solar irradiance;Photovoltaic;forecasting;regression models;deep learning;hybrid},
