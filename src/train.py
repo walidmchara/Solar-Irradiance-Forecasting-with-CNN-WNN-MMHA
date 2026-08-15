@@ -6,23 +6,30 @@ from sklearn.preprocessing import StandardScaler
 from torch import nn
 from torch.utils.data import DataLoader
 from src.dataset import SolarSequenceDataset, make_city_sequences
+from src.models.cnn_wnn_mmha import CNNWNNMMHARegressor
 from src.models.lstm import LSTMRegressor
 from src.models.transformer import TransformerRegressor
 from src.preprocessing import load_solar_csv
 
+
 def set_seed(seed):
     random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
+
 
 def build_model(cfg, input_size, sequence_length):
     mc = cfg["model"]
     common = dict(input_size=input_size, hidden_size=mc["hidden_size"],
                   num_layers=mc["num_layers"], dropout=mc["dropout"])
-    if mc["type"].lower() == "lstm":
+    model_type = (mc.get("type") or "").lower()
+    if model_type == "lstm":
         return LSTMRegressor(**common)
-    if mc["type"].lower() == "transformer":
+    if model_type == "transformer":
         return TransformerRegressor(**common, num_heads=mc["num_heads"],
                                     max_length=max(512, sequence_length))
-    raise ValueError("model.type must be 'lstm' or 'transformer'")
+    if model_type in {"cnn_wnn_mmha", "cnn-wnn-mmha", "cnn_wnn_mmha_regressor"}:
+        return CNNWNNMMHARegressor(**common, num_heads=mc["num_heads"],
+                                   max_length=max(512, sequence_length))
+    raise ValueError("model.type must be 'lstm', 'transformer', or 'cnn_wnn_mmha'")
 
 def main(config_path):
     with open(config_path, "r", encoding="utf-8") as f:
