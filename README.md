@@ -42,6 +42,8 @@ The forecasting framework combines the following modules:
 
 The model is trained on historical multivariate time sequences and evaluated on unseen cities or hold-out periods to assess generalization.
 
+The implementation's windows include features from the same timestamp as the target, so its outputs are not necessarily next-step forecasts. The configured target cannot also be an input feature, and evaluation requires cities held out in the checkpoint's training configuration. Users must still check whether each meteorological input and derived feature is available at prediction time; these guards cannot detect indirect target proxies or future information.
+
 ## Project structure
 
 - `src/train.py`: model training pipeline
