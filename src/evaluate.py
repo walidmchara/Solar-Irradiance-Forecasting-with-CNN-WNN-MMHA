@@ -6,6 +6,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from src.dataset import make_city_sequences
 from src.preprocessing import load_solar_csv
 from src.train import build_model
+from src.validation import validate_evaluation_cities, validate_feature_columns
 
 def safe_mape(y_true,y_pred):
     mask=np.abs(y_true)>1.0
@@ -17,10 +18,12 @@ def main(config_path):
     dc=cfg["data"]; out=Path(cfg["output"]["directory"]); model_type=cfg["model"]["type"].lower()
     ckpt=torch.load(out/f"{model_type}_best.pt",map_location="cpu")
     scaler=joblib.load(out/"scaler.joblib")
+    validate_evaluation_cities(ckpt["config"]["data"]["test_cities"], dc["test_cities"])
 
     frame=load_solar_csv(dc["csv_path"],dc["datetime_column"])
     test=frame[frame[dc["city_column"]].isin(dc["test_cities"])].copy()
-    features=list(cfg["features"]["numeric"]); target=dc["target_column"]
+    features=cfg["features"]["numeric"]; target=dc["target_column"]
+    validate_feature_columns(features, target)
     test=test.dropna(subset=features+[target]).copy()
     if test.empty:
         raise ValueError("No rows found for configured test_cities.")

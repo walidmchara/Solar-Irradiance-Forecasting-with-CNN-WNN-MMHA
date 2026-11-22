@@ -11,6 +11,7 @@ from src.models.cnn_wnn_mmha import CNNWNNMMHARegressor
 from src.models.lstm import LSTMRegressor
 from src.models.transformer import TransformerRegressor
 from src.preprocessing import load_solar_csv
+from src.validation import validate_feature_columns, validate_test_cities
 from training_recovery import EpochCheckpoint
 
 
@@ -39,8 +40,9 @@ def main(config_path, checkpoint_dir=None, resume=False):
     set_seed(cfg["seed"])
     dc = cfg["data"]; seq_len = int(dc["sequence_length"])
     frame = load_solar_csv(dc["csv_path"], dc["datetime_column"])
-    features = list(cfg["features"]["numeric"])
+    features = cfg["features"]["numeric"]
     target, city_col, dt_col = dc["target_column"], dc["city_column"], dc["datetime_column"]
+    validate_feature_columns(features, target)
 
     required = set(features + [target, city_col, dt_col])
     missing = sorted(required - set(frame.columns))
@@ -48,6 +50,7 @@ def main(config_path, checkpoint_dir=None, resume=False):
         raise ValueError(f"Missing columns: {missing}")
 
     frame = frame.dropna(subset=features + [target]).copy()
+    validate_test_cities(dc["test_cities"])
     test_cities = set(dc["test_cities"])
     trainval = frame[~frame[city_col].isin(test_cities)].copy()
     if trainval.empty:
