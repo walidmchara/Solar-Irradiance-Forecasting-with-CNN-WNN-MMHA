@@ -68,6 +68,14 @@ python -m src.train --config configs/solar.yaml
 python -m src.evaluate --config configs/solar.yaml
 ```
 
+## Tests
+
+The model and checkpoint-recovery tests use small synthetic inputs and do not require the solar dataset:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
 ## Expected outputs
 
 The training pipeline produces:
